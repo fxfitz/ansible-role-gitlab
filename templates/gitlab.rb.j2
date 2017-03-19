@@ -34,10 +34,17 @@ gitlab_rails['ldap_base'] = '{{ gitlab_ldap_base }}'
 # GitLab Nginx
 ## See https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/nginx.md
 {% if gitlab_nginx_listen_port is defined %}
-nginx['listen_port'] = "{{ gitlab_nginx_listen_port }}"
+nginx['listen_port'] = {{ gitlab_nginx_listen_port }}
 {% endif %}
 {% if gitlab_nginx_listen_https is defined %}
-nginx['listen_https'] = "{{ gitlab_nginx_listen_https }}"
+nginx['listen_https'] = {{ gitlab_nginx_listen_https }}
+{% endif %}
+## https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/doc/settings/nginx.md#supporting-proxied-ssl
+{% if gitlab_nginx_proxied_ssl is defined %}
+nginx['proxy_set_headers'] = {
+  "X-Forwarded-Proto" => "https",
+  "X-Forwarded-Ssl" => "on"
+}
 {% endif %}
 
 # To change other settings, see:
